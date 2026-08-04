@@ -336,6 +336,26 @@ Consider an example using all of the above:
 %}
 ```
 
+### Gists
+
+You can embed a [GitHub Gist](https://gist.github.com/) with the following syntax:
+
+```liquid
+{% include embed/gist.html id='{USER}/{GIST_ID}' %}
+```
+
+Where `id` is the Gist path taken from its URL. For example, given the Gist URL `https://gist.github.com/shhommychon/759036d8f19f868407190ccf8ca75040`, the `id` is `shhommychon/759036d8f19f868407190ccf8ca75040`.
+
+To embed a single file from a multi-file Gist, pass its filename via the `file` attribute:
+
+```liquid
+{%
+  include embed/gist.html
+  id='shhommychon/759036d8f19f868407190ccf8ca75040'
+  file='my_youtube_download.ipynb'
+%}
+```
+
 ## Pinned Posts
 
 You can pin one or more posts to the top of the home page, and the fixed posts are sorted in reverse order according to their release date. Enable by:

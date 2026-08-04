@@ -1,0 +1,22 @@
+{% comment %}
+  Embed a GitHub Gist.
+
+  Parameters:
+    id   — required, the Gist path in the form '{user}/{gist_id}'
+           e.g. 'shhommychon/759036d8f19f868407190ccf8ca75040'
+    file — optional, a single filename within the Gist to embed
+           instead of the whole Gist.
+{% endcomment %}
+
+{% assign gist_id = include.id | strip %}
+
+{%- capture gist_src -%}
+  https://gist.github.com/{{ gist_id }}.js{% if include.file %}?file={{ include.file | strip | uri_escape }}{% endif %}
+{%- endcapture -%}
+
+<script src="{{ gist_src | strip }}"></script>
+<noscript>
+  <a href="https://gist.github.com/{{ gist_id }}" target="_blank" rel="noopener noreferrer">
+    View this Gist on GitHub
+  </a>
+</noscript>
