@@ -1,1 +1,4 @@
 yt-dlp>=2024.1.0
+# ffmpeg 바이너리를 pip 로 함께 제공 (시스템 ffmpeg 가 있으면 그쪽을 우선 사용).
+# 시스템에 ffmpeg 를 직접 설치했다면 이 줄은 없어도 됩니다.
+imageio-ffmpeg>=0.4.9

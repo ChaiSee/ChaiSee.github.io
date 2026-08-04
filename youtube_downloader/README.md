@@ -24,13 +24,13 @@ YouTube 영상을 **다운로드**하고, 원하는 **시작~끝 구간만 잘�
 pip install -r youtube_downloader/requirements.txt
 ```
 
-추가로 `ffmpeg` 가 필요합니다.
+`requirements.txt` 에 포함된 `imageio-ffmpeg` 가 ffmpeg 바이너리를 함께 제공하므로
+**별도 설치 없이 바로 동작**합니다. 시스템에 ffmpeg 가 이미 있으면 그쪽을 우선 사용합니다.
 
 ```bash
-# macOS
-brew install ffmpeg
-# Ubuntu/Debian
-sudo apt install ffmpeg
+# (선택) 시스템 ffmpeg 를 직접 쓰고 싶다면
+# macOS:         brew install ffmpeg
+# Ubuntu/Debian: sudo apt install ffmpeg
 ```
 
 ## CLI 사용법

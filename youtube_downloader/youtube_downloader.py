@@ -99,14 +99,34 @@ class TrimRange:
 # --------------------------------------------------------------------------- #
 # 외부 의존성 확인
 # --------------------------------------------------------------------------- #
-def _require_ffmpeg() -> str:
+def _find_ffmpeg() -> Optional[str]:
+    """ffmpeg 실행 파일 경로를 찾습니다.
+
+    1) PATH 에 설치된 시스템 ffmpeg 를 우선 사용.
+    2) 없으면 ``imageio-ffmpeg`` 가 제공하는 번들 바이너리를 사용
+       (``pip install imageio-ffmpeg`` 만으로 동작 가능).
+    찾지 못하면 None.
+    """
     ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg:
+        return ffmpeg
+    try:
+        import imageio_ffmpeg  # noqa: WPS433
+
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:  # noqa: BLE001 (미설치/조회 실패 시 무시)
+        return None
+
+
+def _require_ffmpeg() -> str:
+    ffmpeg = _find_ffmpeg()
     if not ffmpeg:
         raise RuntimeError(
-            "ffmpeg 를 찾을 수 없습니다. 설치 후 다시 시도하세요.\n"
-            "  macOS: brew install ffmpeg\n"
-            "  Ubuntu/Debian: sudo apt install ffmpeg\n"
-            "  Colab: !apt -qq install ffmpeg"
+            "ffmpeg 를 찾을 수 없습니다. 아래 중 하나로 설치 후 다시 시도하세요.\n"
+            "  pip:            pip install imageio-ffmpeg   (설치 불필요, 가장 간편)\n"
+            "  macOS:          brew install ffmpeg\n"
+            "  Ubuntu/Debian:  sudo apt install ffmpeg\n"
+            "  Colab:          !apt -qq install ffmpeg"
         )
     return ffmpeg
 
@@ -156,6 +176,12 @@ def download(
         "noprogress": quiet,
         "restrictfilenames": False,
     }
+
+    # 영상+오디오 병합 / 오디오 추출에 ffmpeg 가 필요합니다.
+    # 시스템 ffmpeg 가 없으면 imageio-ffmpeg 번들 바이너리를 사용합니다.
+    ffmpeg_path = _find_ffmpeg()
+    if ffmpeg_path:
+        ydl_opts["ffmpeg_location"] = ffmpeg_path
 
     if audio_only:
         ydl_opts["format"] = "bestaudio/best"
